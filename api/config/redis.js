@@ -6,7 +6,6 @@ const redisConfig = {
   maxRetriesPerRequest: null,
 };
 
-// Create a queue with the specified Redis connection
 const jobQueue = new Queue("jobQueue", { redis: redisConfig });
 
 module.exports = jobQueue;
