@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  # ---------------------------------------------
+  # Service 1: The API
+  # ---------------------------------------------
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+      - app-data:/storage
+    depends_on:
+      - redis
+      - db # Wait for DB to start
+    environment:
+      - DB_HOST=db
+      - DB_USER=user
+      - DB_PASS=password
+      - DB_NAME=doc_db
+
+  # ---------------------------------------------
+  # Service 2: The Worker
+  # ---------------------------------------------
+  worker:
+    build: ./worker
+    volumes:
+      - ./worker:/app
+      - /app/node_modules
+      - app-data:/storage
+    command: node src/worker.js
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=user
+      - DB_PASS=password
+      - DB_NAME=doc_db
+
+  # ---------------------------------------------
+  # Service 3: Redis (Queue)
+  # ---------------------------------------------
+  redis:
+    image: redis:alpine
+
+  # ---------------------------------------------
+  # Service 4: PostgreSQL (Database) <--- NEW!
+  # ---------------------------------------------
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=doc_db
+    volumes:
+      - pg-data:/var/lib/postgresql/data # Persist data if container restarts
+    ports:
+      - "5432:5432" # Optional: Open port so you can check DB from your laptop
+
+# ---------------------------------------------
+# Volumes
+# ---------------------------------------------
+volumes:
+  app-data: # Shared file storage
+  pg-data: # Database storage
