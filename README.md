@@ -4,6 +4,8 @@
 
 A scalable, containerized microservice application that converts `.docx` documents into `.pdf` format asynchronously. It uses a robust queue-based architecture to handle high-volume file processing reliably.
 
+Users must upload the batch as `.zip` to the api with all the docx files that need conversion.
+
 ---
 
 ## 🏗 System Architecture
