@@ -6,7 +6,11 @@ const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 
-const fileUpload = require("./controller/fileController");
+const {
+  fileUpload,
+  jobStatus,
+  fileDown,
+} = require("./controller/fileController");
 const pool = require("./config/db");
 
 const storage = multer.diskStorage({
@@ -39,6 +43,8 @@ pool.connect((err, client, release) => {
 });
 
 app.post("/api/v1/jobs", upload.single("file"), fileUpload);
+app.get("/api/v1/jobs/:jobId", jobStatus);
+app.get("/api/v1/jobs/:jobId/download", fileDown);
 
 app.listen(3000, () => {
   console.log("Listening on port 3000-Reloaded");
