@@ -1,23 +1,14 @@
-# 1. Use the official lightweight Node.js image
 FROM node:18-alpine
 
-# 2. Set the working directory inside the container
 WORKDIR /app
 
-# 3. Copy package files FIRST (Better for caching)
-# We copy these before the rest of the code so that if you change code,
-# Docker doesn't have to re-install npm modules.
 COPY package.json ./
 
-# 4. Install dependencies inside the container
 RUN npm install
 
-# 5. Copy the rest of your source code
 COPY . .
 
-# 6. Open the port
 EXPOSE 3000
 
-# 7. The command to run the app
-# We use 'npm run dev' to use nodemon (if installed) or 'node src/server.js'
+
 CMD ["npm", "run", "dev"]

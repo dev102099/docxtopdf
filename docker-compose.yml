@@ -14,7 +14,7 @@ services:
       - app-data:/storage
     depends_on:
       - redis
-      - db # Wait for DB to start
+      - db
     environment:
       - DB_HOST=db
       - DB_USER=user
@@ -27,20 +27,28 @@ services:
   # Service 2: The Worker
   # ---------------------------------------------
   worker:
-    build: ./worker
+    build: ./workers
     volumes:
-      - ./worker:/app
+      - ./workers:/app
       - /app/node_modules
       - app-data:/storage
-    command: node src/worker.js
+    command: node index.js
     depends_on:
       - redis
       - db
+      - gotenberg
     environment:
       - DB_HOST=db
       - DB_USER=user
       - DB_PASS=password
       - DB_NAME=doc_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    ports:
+      - "3001:3000"
 
   # ---------------------------------------------
   # Service 3: Redis (Queue)
@@ -52,7 +60,7 @@ services:
       - "6379:6379"
 
   # ---------------------------------------------
-  # Service 4: PostgreSQL (Database) <--- NEW!
+  # Service 4: PostgreSQL (Database)
   # ---------------------------------------------
   db:
     image: postgres:15-alpine
@@ -61,10 +69,10 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=doc_db
     volumes:
-      - pg-data:/var/lib/postgresql/data # Persist data if container restarts
+      - pg-data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432" # Optional: Open port so you can check DB from your laptop
+      - "5432:5432"
 
 # ---------------------------------------------
 # Volumes

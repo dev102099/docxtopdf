@@ -14,8 +14,8 @@ const storage = multer.diskStorage({
     const jobId = uuidv4();
     req.jobId = jobId;
 
-    const BASE_PATH = fs.existsSync("/storage")
-      ? "/storage"
+    const BASE_PATH = fs.existsSync("/storage/")
+      ? "/storage/"
       : path.join(__dirname, "../uploads");
     const uploadPath = path.join(BASE_PATH, jobId, "input");
 
