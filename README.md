@@ -55,13 +55,13 @@ The application is built using a decoupled microservices pattern to ensure scala
 
 ## 📡 API Reference
 
-Base URL: `http://localhost:3000/api/v1`
+Base URL: `http://localhost:3000/api/v1/jobs`
 
 ### 1. Upload Job
 
 Submit a ZIP file containing one or more `.docx` files.
 
-- **Endpoint:** `POST /upload`
+- **Endpoint:** `POST /`
 - **Body:** `multipart/form-data`
   - `file`: (Binary) The .zip file.
 - **Example Response:**
@@ -76,7 +76,7 @@ Submit a ZIP file containing one or more `.docx` files.
 
 Poll this endpoint to track conversion progress.
 
-- **Endpoint:** `GET /jobs/:jobId`
+- **Endpoint:** `GET /:jobId`
 - **Example Response:**
   ```json
   {
@@ -95,7 +95,7 @@ Poll this endpoint to track conversion progress.
 
 Retrieve the final processed ZIP file.
 
-- **Endpoint:** `GET /jobs/:jobId/download`
+- **Endpoint:** `GET /:jobId/download`
 - **Response:** Binary Stream (`application/zip`)
 
 ---
